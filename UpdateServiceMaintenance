@@ -1,0 +1,26 @@
+# Description: PowerShell script that automatically runs maintenance tasks related to Windows Update services in the event of Windows having problems downloading latest updates.
+# Author: Daniel Mora, Rently
+
+# Stop the Background Intelligent Transfer Service (BITS)
+Stop-Service -Name "BITS" -Force
+
+# Stop the Windows Update service
+Stop-Service -Name "wuauserv" -Force
+
+#Stop the Cryptographic service
+Stop-Service -Name "cryptsvc" -Force
+
+# Rename the SoftwareDistribution folder
+Rename-Item -Path "$env:SystemRoot\softwaredistribution" -NewName "softwaredistribution.bak" -Force
+
+# Rename the catroot2 folder
+Rename-Item -Path "$env:SystemRoot\system32\catroot2" -NewName "catroot2.bak" -Force
+
+# Start the BITS service
+Start-Service -Name "BITS"
+
+# Start the Windows Update service
+Start-Service -Name "wuauserv"
+
+#Start the Cryptographic service
+Start-Service -Name "cryptsvc"
