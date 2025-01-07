@@ -1,0 +1,6 @@
+#!/bin/bash
+# Run as Repeating every day at 00:00
+# Log out all logged-in users properly
+for user in $(who | awk '{print $1}' | sort | uniq); do
+    sudo launchctl bootout user/$(id -u "$user")
+done
