@@ -1,0 +1,18 @@
+# Run as Repeating every 1 day at 00:00 
+# Get all user sessions
+$sessions = quser | ForEach-Object {
+    $parts = $_ -split '\s+', 5
+    if ($parts[1] -ne '>' -and $parts[1] -ne 'ID') {
+        [PSCustomObject]@{
+            UserName  = $parts[0]
+            SessionId = $parts[2]
+        }
+    }
+}
+
+# Log off each user session
+foreach ($session in $sessions) {
+    if ($session.SessionId -ne $env:SESSIONNAME) {
+        logoff $session.SessionId
+    }
+}
